@@ -1,12 +1,34 @@
 {
-  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": false,
+  "editor.formatOnSaveMode": "file",
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always"
+    "source.format.oxc": "always",
+    "source.fixAll.oxc": "always"
   },
-  "eslint.useFlatConfig": true,
-  "cSpell.words": ["nodenext", "npmjs", "Royston", "Shufflebotham", "shufflies", "USERCONFIG"],
-  "cSpell.ignorePaths": ["pnpm-lock.yaml", "node_modules", ".git", ".vscode", "lib"],
+  "cSpell.words": [
+    "nodenext",
+    "npmjs",
+    "oxc",
+    "oxfmt",
+    "oxlint",
+    "Royston",
+    "Shufflebotham",
+    "shufflies",
+    "tsgolint",
+    "USERCONFIG"
+  ],
+  "cSpell.ignorePaths": [
+    "pnpm-lock.yaml",
+    "node_modules",
+    ".git",
+    ".vscode",
+    "lib"
+  ],
   "json.schemaDownload.trustedDomains": {
     "https://docs.renovatebot.com/renovate-schema.json": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   }
 }

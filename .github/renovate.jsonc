@@ -22,15 +22,8 @@
   ],
   "packageRules": [
     {
-      // These packages change constantly, and we really don't care
-      "matchPackageNames": ["caniuse-lite", "electron-to-chromium", "browserslist"],
-      "matchUpdateTypes": ["patch"],
-      "groupName": "Browser Versions",
-      "enabled": false
-    },
-    {
-      "matchPackagePatterns": ["^@eslint/", "^eslint", "^typescript-eslint", "^@typescript-eslint/"],
-      "groupName": "ESLint"
+      "matchPackageNames": ["oxlint", "oxfmt"],
+      "groupName": "Oxc"
     },
     {
       "matchPackagePrefixes": ["@commitlint/"],
@@ -40,10 +33,6 @@
       "matchPackageNames": ["semantic-release"],
       "matchPackagePrefixes": ["@semantic-release/"],
       "groupName": "Semantic Release"
-    },
-    {
-      "matchPackageNames": ["lodash", "lodash-es"],
-      "groupName": "Lodash"
     },
     {
       "matchPackageNames": ["@types/node", "concurrently", "husky", "rimraf"],

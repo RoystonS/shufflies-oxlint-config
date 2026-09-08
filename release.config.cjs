@@ -8,7 +8,7 @@ module.exports = {
         preset: "conventionalcommits",
         releaseRules: [
           // Dependency chores with specific subjects can trigger a release
-          { type: "chore", scope: "deps", subject: "*bump*eslint*", release: "minor" },
+          { type: "chore", scope: "deps", subject: "*bump*oxlint*", release: "minor" },
         ],
       },
     ],

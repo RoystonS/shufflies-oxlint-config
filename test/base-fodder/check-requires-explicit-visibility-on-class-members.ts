@@ -1,8 +1,10 @@
+import { nonEmptyFunction } from "./utils";
+
 export class MyClass {
   public goodPublicProperty = "X";
   private goodPrivateProperty = "X";
 
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+  // oxlint-disable-next-line typescript/explicit-member-accessibility
   badPropertyWithoutVisibility = "X";
 
   public goodPublicMethod() {
@@ -11,11 +13,16 @@ export class MyClass {
     this.goodPrivateProperty = this.badPropertyWithoutVisibility;
     this.badPropertyWithoutVisibility = this.goodPublicProperty;
 
-    this.goodPrivateMethod();
-    this.badMethodWithoutVisibility();
+    MyClass.goodPrivateMethod();
+    MyClass.badMethodWithoutVisibility();
   }
-  private goodPrivateMethod() {}
 
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-  badMethodWithoutVisibility() {}
+  private static goodPrivateMethod() {
+    nonEmptyFunction();
+  }
+
+  // oxlint-disable-next-line typescript/explicit-member-accessibility
+  static badMethodWithoutVisibility() {
+    nonEmptyFunction();
+  }
 }
