@@ -28,6 +28,9 @@ export default defineConfig({
         prefer: "type-imports",
       },
     ],
+    // Don't check import declaration order; we use oxfmt as it's more flexible
+    "eslint/sort-imports": ["error", { ignoreDeclarationSort: true, ignoreCase: true }],
+
     // We prefer named exports to default exports.
     "import/no-default-export": "warn",
     "import/no-named-export": "off",
@@ -100,6 +103,9 @@ export default defineConfig({
     // rule that insists on no spaces inside empty braces.
     "unicorn/empty-brace-spaces": "off",
     "eslint/capitalized-comments": ["error", "always", { ignoreConsecutiveComments: true }],
+
+    // It's better to group object keys logically than rigorously alphabetical
+    "eslint/sort-keys": "off",
   },
 
   options: {
