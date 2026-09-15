@@ -15,11 +15,11 @@ npm install -D @shufflies/oxlint-config
 
 The package provides three presets, each a config object to pass to `extends`:
 
-| Export | Purpose |
-| ------ | ------- |
-| `base` (also the default) | Neutral TypeScript rules — for any non-UI, non-Node-specific project |
-| `react` | Adds the `react` + `jsx-a11y` plugins and React-specific overrides for a React SPA |
-| `node` | Adds the `node` plugin and Node.js environment globals for a Node.js app |
+| Export                    | Purpose                                                                            |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `base` (also the default) | Neutral TypeScript rules — for any non-UI, non-Node-specific project               |
+| `react`                   | Adds the `react` + `jsx-a11y` plugins and React-specific overrides for a React SPA |
+| `node`                    | Adds the `node` plugin and Node.js environment globals for a Node.js app           |
 
 The presets are layered: `react` and `node` both extend `base`, so there's no duplication and you only need to extend the one that fits your project.
 
@@ -66,4 +66,3 @@ Then run the linter:
 ```shell
 npx oxlint
 ```
-

@@ -40,6 +40,8 @@ jobs:
         run: npm clean-install
       - name: Build package
         run: npm run build
+      - name: Check formatting
+        run: npm run format:check
       - name: Run tests
         run: npm test
       - name: Run semantic-release

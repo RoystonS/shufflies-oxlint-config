@@ -18,13 +18,7 @@
     "tsgolint",
     "USERCONFIG"
   ],
-  "cSpell.ignorePaths": [
-    "pnpm-lock.yaml",
-    "node_modules",
-    ".git",
-    ".vscode",
-    "lib"
-  ],
+  "cSpell.ignorePaths": ["pnpm-lock.yaml", "node_modules", ".git", ".vscode", "lib"],
   "json.schemaDownload.trustedDomains": {
     "https://docs.renovatebot.com/renovate-schema.json": true
   },
