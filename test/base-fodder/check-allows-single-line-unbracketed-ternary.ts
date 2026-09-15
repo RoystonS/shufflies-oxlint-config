@@ -1,5 +1,4 @@
-const testMethod = (condition: boolean): string =>
-  condition ? "Condition is true" : "Condition is false";
+const testMethod = (condition: boolean): string => (condition ? "Condition is true" : "Condition is false");
 
 const revcmp = (value1: number, value2: number): number =>
   // We want to be able to use simple non-bracketed syntax here
