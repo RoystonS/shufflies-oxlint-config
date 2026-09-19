@@ -87,7 +87,6 @@ export default defineConfig({
     "eslint/no-ternary": "off",
     "eslint/no-nested-ternary": "off",
     "unicorn/no-nested-ternary": "off",
-    "eslint/no-magic-numbers": ["error", { ignore: [0, 1, -1] }],
     // There is no need to _prohibit_ zero fractions. [0.6, 0.8, 1.0, 1.2] is
     // perfectly reasonable.
     "unicorn/no-zero-fractions": "off",
@@ -102,10 +101,46 @@ export default defineConfig({
     // oxfmt will split empty braces onto their own lines, so we can't have a
     // rule that insists on no spaces inside empty braces.
     "unicorn/empty-brace-spaces": "off",
-    "eslint/capitalized-comments": ["error", "always", { ignoreConsecutiveComments: true }],
 
     // It's better to group object keys logically than rigorously alphabetical
     "eslint/sort-keys": "off",
+
+    // ---- Opt-outs ----------------------------------------------------------
+    // The categories above switch on every rule in `style`, `pedantic` and
+    // `restriction`, which drags in a lot of opinionated, off-by-default rules.
+    // Rather than have every project re-litigate the same ones, we trialled them
+    // here and turned the noisy ones off, once. Grouped by their category.
+    // Each of these has a `check-allows-*` fixture in `test/base-fodder`.
+
+    // restriction
+    "eslint/no-plusplus": "off", // `i++` is idiomatic
+    "eslint/no-use-before-define": "off", // helpers read better after their caller
+    "import/no-relative-parent-imports": "off", // `../` is fine
+    "oxc/no-async-await": "off", // async/await is the modern idiom; this bans it outright
+    "oxc/no-optional-chaining": "off", // `a?.b` beats manual guards
+    "oxc/no-rest-spread-properties": "off", // object spread is idiomatic
+
+    // style
+    "eslint/capitalized-comments": "off", // ASCII diagrams and commented-out code are fine
+    "eslint/id-length": "off", // x/y/i are idiomatic in geometry and maths
+    "eslint/init-declarations": "off", // we often assign in a later branch or loop
+    "eslint/no-continue": "off", // `continue` says "skip this item" clearly
+    "eslint/no-magic-numbers": "off", // pervasive in geometry, typography and config
+    "eslint/prefer-destructuring": "off", // not always clearer than member access
+    "import/exports-last": "off", // exports don't have to sit at the bottom
+    "import/group-exports": "off", // exports are grouped per component/module
+    "typescript/consistent-type-definitions": "off", // `type` and `interface` each have uses
+    "typescript/no-empty-interface": "off", // useful for extension/declaration merging
+
+    // pedantic
+    "eslint/no-else-return": "off", // an explicit `else` makes the either/or clearer
+    "eslint/no-inline-comments": "off", // inline comments are useful
+    "eslint/no-lonely-if": "off", // explicit blocks make the alternative paths clearer
+    "unicorn/no-lonely-if": "off", // same intent; this plugin's take targets a different shape
+    "eslint/no-warning-comments": "off", // TODO/FIXME notes are useful
+
+    // suspicious
+    "typescript/consistent-return": "off", // doesn't understand `assertNever`; tsc covers it
   },
 
   options: {

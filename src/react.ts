@@ -25,5 +25,8 @@ export default defineConfig({
     "unicorn/prefer-query-selector": "off",
     // Arrow-shorthand state setters returning `void` are idiomatic React.
     "typescript/no-confusing-void-expression": "off",
+    // Our own components legitimately take `className`/`style` props.
+    // Has a `check-allows-*` fixture in `test/react-fodder`.
+    "react/forbid-component-props": "off",
   },
 });
