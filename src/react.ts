@@ -28,5 +28,10 @@ export default defineConfig({
     // Our own components legitimately take `className`/`style` props.
     // Has a `check-allows-*` fixture in `test/react-fodder`.
     "react/forbid-component-props": "off",
+    // Spreading props onto a full React component can be confusing, but it's fine
+    // on HTML elements.
+    "react/jsx-props-no-spreading": ["warn", { html: "ignore" }],
+    // Exporting non-components alongside components is always fine.
+    "react/only-export-components": "off",
   },
 });
