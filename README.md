@@ -66,3 +66,7 @@ Then run the linter:
 ```shell
 npx oxlint
 ```
+
+## Contributing
+
+See [AGENTS.md](./AGENTS.md) for the fixture and test conventions this repo uses.

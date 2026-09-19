@@ -40,6 +40,10 @@ export default defineConfig({
     "eslint/no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
     // Largely duplicates `eslint/no-duplicate-imports`, so disable it.
     "import/no-duplicates": "off",
+    // Keep mixed value + type imports in a single statement (so we don't import
+    // the same module twice), but still require a top-level `import type` when
+    // every specifier is a type.
+    "import/consistent-type-specifier-style": ["warn", "prefer-top-level-if-only-type-imports"],
     // `import "./index.css"` side-effect imports are idiomatic in Vite.
     "import/no-unassigned-import": "off",
     // We don't need to prohibit "node:*" imports.
@@ -60,6 +64,9 @@ export default defineConfig({
     "typescript/no-empty-object-type": "off",
     // Destructured props objects are never mutated.
     "typescript/prefer-readonly-parameter-types": "off",
+    // An explicit `default` is a deliberate catch-all, so don't also demand
+    // case-by-case enumeration; still require exhaustiveness without one.
+    "typescript/switch-exhaustiveness-check": ["warn", { considerDefaultExhaustiveForUnions: true }],
 
     // ---- Variables & values ------------------------------------------------
     // oxlint's TypeScript-aware no-unused-vars lives under the `eslint` plugin
@@ -78,6 +85,8 @@ export default defineConfig({
     ],
     // We don't need to force all nearby variables into a single const/let.
     "eslint/one-var": "off",
+    // Chained assignment outside a declaration (e.g. `pair[0] = pair[1] = 0`) is fine.
+    "eslint/no-multi-assign": ["warn", { ignoreNonDeclaration: true }],
     // Don't prohibit use of `undefined`.
     "eslint/no-undefined": "off",
     "unicorn/no-useless-undefined": "off",
@@ -87,6 +96,10 @@ export default defineConfig({
     "eslint/no-ternary": "off",
     "eslint/no-nested-ternary": "off",
     "unicorn/no-nested-ternary": "off",
+    // We use `void` as a statement to explicitly discard a promise's result.
+    // `allowAsStatement` keeps the rule's original purpose (catching `void 0`
+    // used as an expression) intact.
+    "eslint/no-void": ["warn", { allowAsStatement: true }],
     // There is no need to _prohibit_ zero fractions. [0.6, 0.8, 1.0, 1.2] is
     // perfectly reasonable.
     "unicorn/no-zero-fractions": "off",
@@ -142,6 +155,26 @@ export default defineConfig({
     // suspicious
     "typescript/consistent-return": "off", // doesn't understand `assertNever`; tsc covers it
   },
+
+  overrides: [
+    {
+      // Ambient declaration files (e.g. `vite-env.d.ts`) contain no import/export,
+      // but are modules by convention rather than scripts.
+      // Has a `check-allows-*` fixture in `test/base-fodder`.
+      files: ["**/*.d.ts"],
+      rules: {
+        "import/unambiguous": "off",
+      },
+    },
+    {
+      // Lint config modules are inherently default-exporting, so name-matching
+      // files are exempt. Fixture: `test/base-fodder/oxlint.config.ts`.
+      files: ["**/oxlint.config.ts", "**/oxlint.config.mts"],
+      rules: {
+        "import/no-default-export": "off",
+      },
+    },
+  ],
 
   options: {
     typeAware: true,
