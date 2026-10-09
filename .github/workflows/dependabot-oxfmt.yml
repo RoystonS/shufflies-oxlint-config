@@ -34,7 +34,7 @@ jobs:
             exit 0
           fi
 
-          pull_requests=$(gh api "repos/${GITHUB_REPOSITORY}/pulls" \
+          pull_requests=$(gh api --method GET "repos/${GITHUB_REPOSITORY}/pulls" \
             -f state=open \
             -f "head=${GITHUB_REPOSITORY_OWNER}:${HEAD_BRANCH}")
           pull_request=$(jq -c --arg repository "$GITHUB_REPOSITORY" \
