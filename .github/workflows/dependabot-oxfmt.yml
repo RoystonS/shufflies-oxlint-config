@@ -1,0 +1,199 @@
+name: Reformat Dependabot oxfmt updates
+on:
+  workflow_run:
+    workflows: [Pull Request CI]
+    types: [completed]
+
+jobs:
+  format:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    outputs:
+      pr-number: ${{ steps.target.outputs.pr-number }}
+      pr-head-ref: ${{ steps.target.outputs.pr-head-ref }}
+      pr-head-sha: ${{ steps.target.outputs.pr-head-sha }}
+      oxfmt-updated: ${{ steps.oxfmt.outputs.updated }}
+      has-changes: ${{ steps.patch.outputs.changed }}
+
+    steps:
+      - name: Find the Dependabot pull request
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+        run: |
+          if [ "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          pull_requests=$(gh api "repos/${GITHUB_REPOSITORY}/pulls" \
+            -f state=open \
+            -f "head=${GITHUB_REPOSITORY_OWNER}:${HEAD_BRANCH}")
+          pull_request=$(jq -c --arg repository "$GITHUB_REPOSITORY" \
+            '[.[] | select(.user.login == "dependabot[bot]" and .head.repo.full_name == $repository)] | first // empty' \
+            <<< "$pull_requests")
+
+          if [ -z "$pull_request" ]; then
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "eligible=true" >> "$GITHUB_OUTPUT"
+          echo "pr-number=$(jq -r '.number' <<< "$pull_request")" >> "$GITHUB_OUTPUT"
+          echo "pr-head-ref=$(jq -r '.head.ref' <<< "$pull_request")" >> "$GITHUB_OUTPUT"
+          echo "pr-head-sha=$(jq -r '.head.sha' <<< "$pull_request")" >> "$GITHUB_OUTPUT"
+          echo "pr-base-sha=$(jq -r '.base.sha' <<< "$pull_request")" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the base branch
+        if: steps.target.outputs.eligible == 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Check whether oxfmt was updated
+        id: oxfmt
+        if: steps.target.outputs.eligible == 'true'
+        env:
+          PR_BASE_SHA: ${{ steps.target.outputs.pr-base-sha }}
+          PR_HEAD_SHA: ${{ steps.target.outputs.pr-head-sha }}
+        run: |
+          git fetch --no-tags origin "$PR_BASE_SHA" "$PR_HEAD_SHA"
+          base_version=$(git show "$PR_BASE_SHA:package-lock.json" | jq -r '.packages["node_modules/oxfmt"].version // ""')
+          head_version=$(git show "$PR_HEAD_SHA:package-lock.json" | jq -r '.packages["node_modules/oxfmt"].version // ""')
+
+          if [ -n "$head_version" ] && [ "$base_version" != "$head_version" ]; then
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out the Dependabot branch
+        if: steps.oxfmt.outputs.updated == 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.target.outputs.pr-head-ref }}
+          persist-credentials: false
+
+      - name: Set up Node.js
+        if: steps.oxfmt.outputs.updated == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install npm 12 and dependencies
+        if: steps.oxfmt.outputs.updated == 'true'
+        run: |
+          npm i -g npm@12
+          npm clean-install
+
+      - name: Format with the updated oxfmt
+        if: steps.oxfmt.outputs.updated == 'true'
+        run: npm run format
+
+      - name: Create a formatting patch
+        id: patch
+        if: steps.oxfmt.outputs.updated == 'true'
+        env:
+          PATCH_FILE: ${{ runner.temp }}/oxfmt-format.patch
+        run: |
+          git diff --binary > "$PATCH_FILE"
+          if [ -s "$PATCH_FILE" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload the formatting patch
+        if: steps.patch.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: oxfmt-format-patch-${{ github.run_id }}
+          path: ${{ runner.temp }}/oxfmt-format.patch
+          if-no-files-found: error
+          retention-days: 1
+
+  apply-format:
+    needs: format
+    if: needs.format.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: read
+
+    steps:
+      - name: Confirm the pull request is still at the formatted commit
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ needs.format.outputs.pr-number }}
+          PR_HEAD_REF: ${{ needs.format.outputs.pr-head-ref }}
+          PR_HEAD_SHA: ${{ needs.format.outputs.pr-head-sha }}
+        run: |
+          pull_request=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}")
+          if [ "$(jq -r '.state' <<< "$pull_request")" != open ] || \
+            [ "$(jq -r '.user.login' <<< "$pull_request")" != "dependabot[bot]" ] || \
+            [ "$(jq -r '.head.repo.full_name' <<< "$pull_request")" != "$GITHUB_REPOSITORY" ] || \
+            [ "$(jq -r '.head.ref' <<< "$pull_request")" != "$PR_HEAD_REF" ] || \
+            [ "$(jq -r '.head.sha' <<< "$pull_request")" != "$PR_HEAD_SHA" ]; then
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "current=true" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the Dependabot branch
+        if: steps.target.outputs.current == 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.format.outputs.pr-head-ref }}
+          persist-credentials: false
+
+      - name: Download the formatting patch
+        if: steps.target.outputs.current == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: oxfmt-format-patch-${{ github.event.workflow_run.id }}
+          path: ${{ runner.temp }}/oxfmt-patch
+
+      - name: Apply the formatting patch
+        id: patch
+        if: steps.target.outputs.current == 'true'
+        env:
+          PATCH_FILE: ${{ runner.temp }}/oxfmt-patch/oxfmt-format.patch
+        run: |
+          git apply --check "$PATCH_FILE"
+          git apply "$PATCH_FILE"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push formatting changes
+        id: push-format
+        if: steps.patch.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_HEAD_REF: ${{ needs.format.outputs.pr-head-ref }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git -c core.hooksPath=/dev/null add --all
+          git -c core.hooksPath=/dev/null commit -m "chore: format with updated oxfmt"
+          gh auth setup-git
+          git -c core.hooksPath=/dev/null push origin "HEAD:${PR_HEAD_REF}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run CI on the formatted branch
+        if: steps.push-format.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_HEAD_REF: ${{ needs.format.outputs.pr-head-ref }}
+        run: gh workflow run pr.yml --repo "$GITHUB_REPOSITORY" --ref "$PR_HEAD_REF"
