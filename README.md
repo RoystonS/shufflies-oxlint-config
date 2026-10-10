@@ -26,9 +26,8 @@ The presets are layered: `react` and `node` both extend `base`, so there's no du
 For a neutral TypeScript project:
 
 ```ts
-import { defineConfig } from "oxlint";
-
 import config from "@shufflies/oxlint-config";
+import { defineConfig } from "oxlint";
 
 export default defineConfig({
   extends: [config],
@@ -38,9 +37,8 @@ export default defineConfig({
 For a React SPA:
 
 ```ts
-import { defineConfig } from "oxlint";
-
 import { react } from "@shufflies/oxlint-config";
+import { defineConfig } from "oxlint";
 
 export default defineConfig({
   extends: [react],
@@ -50,9 +48,8 @@ export default defineConfig({
 For a Node.js app:
 
 ```ts
-import { defineConfig } from "oxlint";
-
 import { node } from "@shufflies/oxlint-config";
+import { defineConfig } from "oxlint";
 
 export default defineConfig({
   extends: [node],
