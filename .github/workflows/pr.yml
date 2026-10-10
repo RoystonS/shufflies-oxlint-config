@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Branch or commit to check after automated formatting
+        description: Formatted commit SHA to check after automated formatting
         required: true
         type: string
 
@@ -51,7 +51,30 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-and-test]
     if: always()
+    permissions:
+      statuses: write
     steps:
+      - name: Report dispatched CI status on the tested commit
+        if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ inputs.ref }}
+          BUILD_RESULT: ${{ needs.build-and-test.result }}
+        run: |
+          if [ "$BUILD_RESULT" = success ]; then
+            state=success
+            description="CI passed on formatted Dependabot commit"
+          else
+            state=failure
+            description="CI failed on formatted Dependabot commit"
+          fi
+
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/statuses/${TARGET_SHA}" \
+            -f "state=${state}" \
+            -f "context=Dependabot CI" \
+            -f "description=${description}" \
+            -f "target_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
       - name: Check build and test results
         run: |
           if [ "${{ needs.build-and-test.result }}" != "success" ]; then
