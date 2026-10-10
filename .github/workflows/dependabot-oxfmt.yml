@@ -163,7 +163,7 @@ jobs:
         if: steps.target.outputs.current == 'true'
         uses: actions/download-artifact@v4
         with:
-          name: oxfmt-format-patch-${{ github.event.workflow_run.id }}
+          name: oxfmt-format-patch-${{ github.run_id }}
           path: ${{ runner.temp }}/oxfmt-patch
 
       - name: Apply the formatting patch
