@@ -7,8 +7,12 @@ module.exports = {
       {
         preset: "conventionalcommits",
         releaseRules: [
-          // Dependency chores with specific subjects can trigger a release
-          { type: "chore", scope: "deps", subject: "*bump*oxlint*", release: "minor" },
+          // Dependabot's `include: "scope"` emits `deps-dev` for devDependency updates.
+          // Its grouped OXC commits name the group in the subject; individual updates
+          // name the package there.
+          { type: "chore", scope: "deps*", subject: "*bump*oxlint*", release: "minor" },
+          { type: "chore", scope: "deps*", subject: "*bump*oxfmt*", release: "minor" },
+          { type: "chore", scope: "deps*", subject: "*bump*oxc group*", release: "minor" },
         ],
       },
     ],
