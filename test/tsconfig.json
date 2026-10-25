@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./lib",
-    "rootDir": "base-fodder",
+    "rootDir": ".",
     "types": ["node"]
   }
 }
