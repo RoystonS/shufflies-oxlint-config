@@ -49,6 +49,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "@kensio/smartass": "^1.40.1",
     "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/npm": "14.0.0-beta.2",
     "@types/node": "^26.6.5",

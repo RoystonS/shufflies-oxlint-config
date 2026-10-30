@@ -73,19 +73,39 @@ It only contains the rules; choose the file
 patterns that identify tests in your project and apply them with an override:
 
 ```ts
+import { createRequire } from "node:module";
+
 import { base, testRules } from "@shufflies/oxlint-config";
 import { defineConfig } from "oxlint";
 
+const require = createRequire(import.meta.url);
+let smartassAvailable = true;
+
+try {
+  require.resolve("@kensio/smartass/oxlint");
+} catch {
+  smartassAvailable = false;
+}
+
+const { "smartass/prefer-specific-assertions": _smartassRule, ...testRulesWithoutSmartass } = testRules;
+const rules = smartassAvailable ? testRules : testRulesWithoutSmartass;
+
 export default defineConfig({
   extends: [base],
+  ...(smartassAvailable && {
+    jsPlugins: [{ name: "smartass", specifier: "@kensio/smartass/oxlint" }],
+  }),
   overrides: [
     {
       files: ["src/**/*.test.ts", "src/**/*.spec.ts"],
-      rules: testRules,
+      rules,
     },
   ],
 });
 ```
+
+The assertion rule is enabled when `@kensio/smartass` is installed; otherwise,
+the other `testRules` still apply.
 
 Use `react` or `node` in `extends` instead of `base` when that preset fits your
 project. The `testRules` export can be used with any of them.
