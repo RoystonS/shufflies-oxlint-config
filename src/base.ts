@@ -134,6 +134,7 @@ export default defineConfig({
     "oxc/no-rest-spread-properties": "off", // object spread is idiomatic
 
     // style
+    curly: ["error", "all"], // Always use curly braces, even for single-line blocks
     "eslint/capitalized-comments": "off", // ASCII diagrams and commented-out code are fine
     "eslint/id-length": "off", // x/y/i are idiomatic in geometry and maths
     "eslint/init-declarations": "off", // we often assign in a later branch or loop
