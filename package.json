@@ -57,7 +57,7 @@
     "concurrently": "^10.0.7",
     "husky": "^9.1.7",
     "oxfmt": "^0.78.0",
-    "oxlint": "^1.93.0",
+    "oxlint": "^1.95.0",
     "oxlint-tsgolint": "^7.0.2007",
     "rimraf": "^6.1.4",
     "semantic-release": "25.0.9",
