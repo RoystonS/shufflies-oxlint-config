@@ -133,6 +133,10 @@ export default defineConfig({
     "oxc/no-optional-chaining": "off", // `a?.b` beats manual guards
     "oxc/no-rest-spread-properties": "off", // object spread is idiomatic
 
+    // Add some reasonable max limits but not too restrictive
+    "eslint/max-lines-per-function": ["warn", { max: 100 }], // Reasonable limit for functions
+    "eslint/max-lines": ["warn", { max: 500 }], // Reasonable limit for files
+
     // style
     curly: ["error", "all"], // Always use curly braces, even for single-line blocks
     "eslint/capitalized-comments": "off", // ASCII diagrams and commented-out code are fine
