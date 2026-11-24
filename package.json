@@ -56,17 +56,17 @@
     "@types/node": "^26.6.6",
     "concurrently": "^10.0.7",
     "husky": "^9.1.7",
-    "oxfmt": "^0.78.0",
-    "oxlint": "^1.93.0",
-    "oxlint-tsgolint": "^7.0.2007",
+    "oxfmt": "^0.79.0",
+    "oxlint": "^1.94.0",
+    "oxlint-tsgolint": "^7.0.2008",
     "rimraf": "^6.1.4",
     "semantic-release": "25.0.9",
     "typescript": "^7.0.2",
     "vitest": "^5.1.1"
   },
   "peerDependencies": {
-    "oxlint": "^1.93.0",
-    "oxlint-tsgolint": "^7.0.2007"
+    "oxlint": "^1.94.0",
+    "oxlint-tsgolint": "^7.0.2008"
   },
   "engines": {
     "node": "^22.18.0 || >=24"
