@@ -34,7 +34,8 @@
     "prepare": "husky",
     "clean": "rimraf lib",
     "pretest": "npm run build",
-    "test": "npm run test:base && npm run test:react && npm run test:node && npm run test:rules",
+    "update-test-snapshots": "npx vitest --update all",
+    "test": "npm run test:base && npm run test:react && npm run test:node && npm run test:rules && npx vitest run test/config-snapshots.spec.mjs",
     "test:base": "oxlint test/base-fodder --config test/base.config.mjs --report-unused-disable-directives-severity error --max-warnings=0",
     "test:react": "oxlint test/react-fodder --config test/react.config.mjs --report-unused-disable-directives-severity error --max-warnings=0",
     "test:node": "oxlint test/node-fodder --config test/node.config.mjs --report-unused-disable-directives-severity error --max-warnings=0",
@@ -60,7 +61,8 @@
     "oxlint-tsgolint": "^7.0.2007",
     "rimraf": "^6.1.4",
     "semantic-release": "25.0.9",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
   },
   "peerDependencies": {
     "oxlint": "^1.93.0",

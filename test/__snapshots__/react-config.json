@@ -1,0 +1,197 @@
+{
+  "env": {
+    "browser": true,
+  },
+  "extends": [
+    {
+      "categories": {
+        "correctness": "error",
+        "nursery": "off",
+        "pedantic": "warn",
+        "perf": "warn",
+        "restriction": "warn",
+        "style": "warn",
+        "suspicious": "warn",
+      },
+      "options": {
+        "typeAware": true,
+      },
+      "overrides": [
+        {
+          "files": [
+            "**/*.d.ts",
+          ],
+          "rules": {
+            "import/unambiguous": "off",
+          },
+        },
+        {
+          "files": [
+            "**/oxlint.config.ts",
+            "**/oxlint.config.mts",
+          ],
+          "rules": {
+            "import/no-default-export": "off",
+          },
+        },
+      ],
+      "plugins": [
+        "import",
+        "oxc",
+        "typescript",
+        "unicorn",
+      ],
+      "rules": {
+        "curly": [
+          "error",
+          "all",
+        ],
+        "eslint/arrow-body-style": "off",
+        "eslint/capitalized-comments": "off",
+        "eslint/func-style": "off",
+        "eslint/id-length": "off",
+        "eslint/init-declarations": "off",
+        "eslint/max-lines": [
+          "warn",
+          {
+            "max": 500,
+          },
+        ],
+        "eslint/max-lines-per-function": [
+          "warn",
+          {
+            "max": 100,
+          },
+        ],
+        "eslint/no-continue": "off",
+        "eslint/no-duplicate-imports": [
+          "error",
+          {
+            "allowSeparateTypeImports": true,
+          },
+        ],
+        "eslint/no-else-return": "off",
+        "eslint/no-inline-comments": "off",
+        "eslint/no-lonely-if": "off",
+        "eslint/no-magic-numbers": "off",
+        "eslint/no-multi-assign": [
+          "warn",
+          {
+            "ignoreNonDeclaration": true,
+          },
+        ],
+        "eslint/no-nested-ternary": "off",
+        "eslint/no-plusplus": "off",
+        "eslint/no-ternary": "off",
+        "eslint/no-undefined": "off",
+        "eslint/no-unused-vars": [
+          "error",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "ignoreRestSiblings": true,
+            "varsIgnorePattern": "^_",
+          },
+        ],
+        "eslint/no-use-before-define": "off",
+        "eslint/no-void": [
+          "warn",
+          {
+            "allowAsStatement": true,
+          },
+        ],
+        "eslint/no-warning-comments": "off",
+        "eslint/one-var": "off",
+        "eslint/prefer-destructuring": "off",
+        "eslint/sort-imports": [
+          "error",
+          {
+            "ignoreCase": true,
+            "ignoreDeclarationSort": true,
+          },
+        ],
+        "eslint/sort-keys": "off",
+        "import/consistent-type-specifier-style": [
+          "warn",
+          "prefer-top-level-if-only-type-imports",
+        ],
+        "import/exports-last": "off",
+        "import/group-exports": "off",
+        "import/no-default-export": "warn",
+        "import/no-duplicates": "off",
+        "import/no-named-export": "off",
+        "import/no-nodejs-modules": "off",
+        "import/no-relative-parent-imports": "off",
+        "import/no-unassigned-import": "off",
+        "import/prefer-default-export": "off",
+        "no-underscore-dangle": [
+          "error",
+          {
+            "allowFunctionParams": true,
+          },
+        ],
+        "oxc/no-async-await": "off",
+        "oxc/no-optional-chaining": "off",
+        "oxc/no-rest-spread-properties": "off",
+        "typescript/consistent-return": "off",
+        "typescript/consistent-type-definitions": "off",
+        "typescript/consistent-type-imports": [
+          "error",
+          {
+            "disallowTypeAnnotations": false,
+            "prefer": "type-imports",
+          },
+        ],
+        "typescript/explicit-function-return-type": "off",
+        "typescript/explicit-member-accessibility": "error",
+        "typescript/explicit-module-boundary-types": "off",
+        "typescript/no-empty-interface": "off",
+        "typescript/no-empty-object-type": "off",
+        "typescript/prefer-readonly-parameter-types": "off",
+        "typescript/switch-exhaustiveness-check": [
+          "warn",
+          {
+            "considerDefaultExhaustiveForUnions": true,
+          },
+        ],
+        "unicorn/empty-brace-spaces": "off",
+        "unicorn/filename-case": "off",
+        "unicorn/no-lonely-if": "off",
+        "unicorn/no-nested-ternary": "off",
+        "unicorn/no-useless-undefined": "off",
+        "unicorn/no-zero-fractions": "off",
+      },
+    },
+  ],
+  "plugins": [
+    "react",
+    "jsx-a11y",
+  ],
+  "rules": {
+    "react/forbid-component-props": "off",
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [
+          ".jsx",
+          ".tsx",
+        ],
+      },
+    ],
+    "react/jsx-no-literals": "off",
+    "react/jsx-props-no-spreading": [
+      "warn",
+      {
+        "html": "ignore",
+      },
+    ],
+    "react/no-multi-comp": "off",
+    "react/only-export-components": "off",
+    "react/react-in-jsx-scope": "off",
+    "typescript/no-confusing-void-expression": "off",
+    "unicorn/prefer-query-selector": "off",
+  },
+}
