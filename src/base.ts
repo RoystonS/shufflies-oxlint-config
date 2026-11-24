@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: ["import", "oxc", "typescript", "unicorn"],
 
   categories: {
-    correctness: "error",
+    correctness: "deny",
     suspicious: "warn",
     perf: "warn",
     pedantic: "warn",
@@ -15,55 +15,55 @@ export default defineConfig({
     restriction: "warn",
 
     // No experimental rules by default
-    nursery: "off",
+    nursery: "allow",
   },
 
   rules: {
     // ---- Imports & exports ------------------------------------------------
     // ✅ Prefer and autofix to `import type`.
     "typescript/consistent-type-imports": [
-      "error",
+      "deny",
       {
         disallowTypeAnnotations: false,
         prefer: "type-imports",
       },
     ],
     // Don't check import declaration order; we use oxfmt as it's more flexible
-    "eslint/sort-imports": ["error", { ignoreDeclarationSort: true, ignoreCase: true }],
+    "eslint/sort-imports": ["deny", { ignoreDeclarationSort: true, ignoreCase: true }],
 
     // We prefer named exports to default exports.
     "import/no-default-export": "warn",
-    "import/no-named-export": "off",
-    "import/prefer-default-export": "off",
+    "import/no-named-export": "allow",
+    "import/prefer-default-export": "allow",
     // We should be allowed to import a module twice if one is a type import and
     // the other is a regular import.
-    "eslint/no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
+    "eslint/no-duplicate-imports": ["deny", { allowSeparateTypeImports: true }],
     // Largely duplicates `eslint/no-duplicate-imports`, so disable it.
-    "import/no-duplicates": "off",
+    "import/no-duplicates": "allow",
     // Keep mixed value + type imports in a single statement (so we don't import
     // the same module twice), but still require a top-level `import type` when
     // every specifier is a type.
     "import/consistent-type-specifier-style": ["warn", "prefer-top-level-if-only-type-imports"],
     // `import "./index.css"` side-effect imports are idiomatic in Vite.
-    "import/no-unassigned-import": "off",
+    "import/no-unassigned-import": "allow",
     // We don't need to prohibit "node:*" imports.
-    "import/no-nodejs-modules": "off",
+    "import/no-nodejs-modules": "allow",
 
     // ---- Functions ---------------------------------------------------------
     // We're happy mixing function statements and function expressions.
-    "eslint/func-style": "off",
+    "eslint/func-style": "allow",
     // There's no need to force arrow functions to have a full block body, and
     // no need to prohibit them either. Both are useful.
-    "eslint/arrow-body-style": "off",
-    // Return types are left to inference; matches `eslint/func-style: "off"`.
-    "typescript/explicit-function-return-type": "off",
-    "typescript/explicit-module-boundary-types": "off",
+    "eslint/arrow-body-style": "allow",
+    // Return types are left to inference; matches `eslint/func-style: "allow"`.
+    "typescript/explicit-function-return-type": "allow",
+    "typescript/explicit-module-boundary-types": "allow",
 
     // ---- Types & classes ---------------------------------------------------
-    "typescript/explicit-member-accessibility": "error",
-    "typescript/no-empty-object-type": "off",
+    "typescript/explicit-member-accessibility": "deny",
+    "typescript/no-empty-object-type": "allow",
     // Destructured props objects are never mutated.
-    "typescript/prefer-readonly-parameter-types": "off",
+    "typescript/prefer-readonly-parameter-types": "allow",
     // An explicit `default` is a deliberate catch-all, so don't also demand
     // case-by-case enumeration; still require exhaustiveness without one.
     "typescript/switch-exhaustiveness-check": ["warn", { considerDefaultExhaustiveForUnions: true }],
@@ -72,7 +72,7 @@ export default defineConfig({
     // oxlint's TypeScript-aware no-unused-vars lives under the `eslint` plugin
     // rather than `typescript`.
     "eslint/no-unused-vars": [
-      "error",
+      "deny",
       {
         args: "all",
         argsIgnorePattern: "^_",
@@ -84,39 +84,39 @@ export default defineConfig({
       },
     ],
     // We don't need to force all nearby variables into a single const/let.
-    "eslint/one-var": "off",
+    "eslint/one-var": "allow",
     // Chained assignment outside a declaration (e.g. `pair[0] = pair[1] = 0`) is fine.
     "eslint/no-multi-assign": ["warn", { ignoreNonDeclaration: true }],
     // Don't prohibit use of `undefined`.
-    "eslint/no-undefined": "off",
-    "unicorn/no-useless-undefined": "off",
+    "eslint/no-undefined": "allow",
+    "unicorn/no-useless-undefined": "allow",
 
     // ---- Operators & literals ----------------------------------------------
     // Don't prohibit ternary operators, even if nested.
-    "eslint/no-ternary": "off",
-    "eslint/no-nested-ternary": "off",
-    "unicorn/no-nested-ternary": "off",
+    "eslint/no-ternary": "allow",
+    "eslint/no-nested-ternary": "allow",
+    "unicorn/no-nested-ternary": "allow",
     // We use `void` as a statement to explicitly discard a promise's result.
     // `allowAsStatement` keeps the rule's original purpose (catching `void 0`
     // used as an expression) intact.
     "eslint/no-void": ["warn", { allowAsStatement: true }],
     // There is no need to _prohibit_ zero fractions. [0.6, 0.8, 1.0, 1.2] is
     // perfectly reasonable.
-    "unicorn/no-zero-fractions": "off",
+    "unicorn/no-zero-fractions": "allow",
 
     // ---- Naming ------------------------------------------------------------
-    "unicorn/filename-case": "off",
+    "unicorn/filename-case": "allow",
     // Whilst prohibiting dangling underscores is a good idea, we do allow them
     // in function parameters as that's useful for indicating unused parameters.
-    "no-underscore-dangle": ["error", { allowFunctionParams: true }],
+    "no-underscore-dangle": ["deny", { allowFunctionParams: true }],
 
     // ---- Stylistic ---------------------------------------------------------
     // oxfmt will split empty braces onto their own lines, so we can't have a
     // rule that insists on no spaces inside empty braces.
-    "unicorn/empty-brace-spaces": "off",
+    "unicorn/empty-brace-spaces": "allow",
 
     // It's better to group object keys logically than rigorously alphabetical
-    "eslint/sort-keys": "off",
+    "eslint/sort-keys": "allow",
 
     // ---- Opt-outs ----------------------------------------------------------
     // The categories above switch on every rule in `style`, `pedantic` and
@@ -126,39 +126,39 @@ export default defineConfig({
     // Each of these has a `check-allows-*` fixture in `test/base-fodder`.
 
     // restriction
-    "eslint/no-plusplus": "off", // `i++` is idiomatic
-    "eslint/no-use-before-define": "off", // helpers read better after their caller
-    "import/no-relative-parent-imports": "off", // `../` is fine
-    "oxc/no-async-await": "off", // async/await is the modern idiom; this bans it outright
-    "oxc/no-optional-chaining": "off", // `a?.b` beats manual guards
-    "oxc/no-rest-spread-properties": "off", // object spread is idiomatic
+    "eslint/no-plusplus": "allow", // `i++` is idiomatic
+    "eslint/no-use-before-define": "allow", // helpers read better after their caller
+    "import/no-relative-parent-imports": "allow", // `../` is fine
+    "oxc/no-async-await": "allow", // async/await is the modern idiom; this bans it outright
+    "oxc/no-optional-chaining": "allow", // `a?.b` beats manual guards
+    "oxc/no-rest-spread-properties": "allow", // object spread is idiomatic
 
     // Add some reasonable max limits but not too restrictive
     "eslint/max-lines-per-function": ["warn", { max: 100 }], // Reasonable limit for functions
     "eslint/max-lines": ["warn", { max: 500 }], // Reasonable limit for files
 
     // style
-    curly: ["error", "all"], // Always use curly braces, even for single-line blocks
-    "eslint/capitalized-comments": "off", // ASCII diagrams and commented-out code are fine
-    "eslint/id-length": "off", // x/y/i are idiomatic in geometry and maths
-    "eslint/init-declarations": "off", // we often assign in a later branch or loop
-    "eslint/no-continue": "off", // `continue` says "skip this item" clearly
-    "eslint/no-magic-numbers": "off", // pervasive in geometry, typography and config
-    "eslint/prefer-destructuring": "off", // not always clearer than member access
-    "import/exports-last": "off", // exports don't have to sit at the bottom
-    "import/group-exports": "off", // exports are grouped per component/module
-    "typescript/consistent-type-definitions": "off", // `type` and `interface` each have uses
-    "typescript/no-empty-interface": "off", // useful for extension/declaration merging
+    curly: ["deny", "all"], // Always use curly braces, even for single-line blocks
+    "eslint/capitalized-comments": "allow", // ASCII diagrams and commented-out code are fine
+    "eslint/id-length": "allow", // x/y/i are idiomatic in geometry and maths
+    "eslint/init-declarations": "allow", // we often assign in a later branch or loop
+    "eslint/no-continue": "allow", // `continue` says "skip this item" clearly
+    "eslint/no-magic-numbers": "allow", // pervasive in geometry, typography and config
+    "eslint/prefer-destructuring": "allow", // not always clearer than member access
+    "import/exports-last": "allow", // exports don't have to sit at the bottom
+    "import/group-exports": "allow", // exports are grouped per component/module
+    "typescript/consistent-type-definitions": "allow", // `type` and `interface` each have uses
+    "typescript/no-empty-interface": "allow", // useful for extension/declaration merging
 
     // pedantic
-    "eslint/no-else-return": "off", // an explicit `else` makes the either/or clearer
-    "eslint/no-inline-comments": "off", // inline comments are useful
-    "eslint/no-lonely-if": "off", // explicit blocks make the alternative paths clearer
-    "unicorn/no-lonely-if": "off", // same intent; this plugin's take targets a different shape
-    "eslint/no-warning-comments": "off", // TODO/FIXME notes are useful
+    "eslint/no-else-return": "allow", // an explicit `else` makes the either/or clearer
+    "eslint/no-inline-comments": "allow", // inline comments are useful
+    "eslint/no-lonely-if": "allow", // explicit blocks make the alternative paths clearer
+    "unicorn/no-lonely-if": "allow", // same intent; this plugin's take targets a different shape
+    "eslint/no-warning-comments": "allow", // TODO/FIXME notes are useful
 
     // suspicious
-    "typescript/consistent-return": "off", // doesn't understand `assertNever`; tsc covers it
+    "typescript/consistent-return": "allow", // doesn't understand `assertNever`; tsc covers it
   },
 
   overrides: [
@@ -168,7 +168,7 @@ export default defineConfig({
       // Has a `check-allows-*` fixture in `test/base-fodder`.
       files: ["**/*.d.ts"],
       rules: {
-        "import/unambiguous": "off",
+        "import/unambiguous": "allow",
       },
     },
     {
@@ -176,7 +176,7 @@ export default defineConfig({
       // files are exempt. Fixture: `test/base-fodder/oxlint.config.ts`.
       files: ["**/oxlint.config.ts", "**/oxlint.config.mts"],
       rules: {
-        "import/no-default-export": "off",
+        "import/no-default-export": "allow",
       },
     },
   ],

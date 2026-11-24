@@ -15,23 +15,23 @@ export default defineConfig({
 
   rules: {
     // React 17+ doesn't require React to be in scope.
-    "react/react-in-jsx-scope": "off",
+    "react/react-in-jsx-scope": "allow",
     // We're happy having multiple components in a single file.
-    "react/no-multi-comp": "off",
-    "react/jsx-filename-extension": ["error", { extensions: [".jsx", ".tsx"] }],
+    "react/no-multi-comp": "allow",
+    "react/jsx-filename-extension": ["deny", { extensions: [".jsx", ".tsx"] }],
     // The demo intentionally renders literal JSX text.
-    "react/jsx-no-literals": "off",
+    "react/jsx-no-literals": "allow",
     // `document.getElementById("root")` is the documented createRoot idiom.
-    "unicorn/prefer-query-selector": "off",
+    "unicorn/prefer-query-selector": "allow",
     // Arrow-shorthand state setters returning `void` are idiomatic React.
-    "typescript/no-confusing-void-expression": "off",
+    "typescript/no-confusing-void-expression": "allow",
     // Our own components legitimately take `className`/`style` props.
     // Has a `check-allows-*` fixture in `test/react-fodder`.
-    "react/forbid-component-props": "off",
+    "react/forbid-component-props": "allow",
     // Spreading props onto a full React component can be confusing, but it's fine
     // on HTML elements.
     "react/jsx-props-no-spreading": ["warn", { html: "ignore" }],
     // Exporting non-components alongside components is always fine.
-    "react/only-export-components": "off",
+    "react/only-export-components": "allow",
   },
 });
