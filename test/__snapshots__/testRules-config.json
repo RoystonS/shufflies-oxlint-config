@@ -1,0 +1,5 @@
+{
+  "eslint/max-lines-per-function": "off",
+  "smartass/prefer-specific-assertions": "warn",
+  "typescript/no-floating-promises": "off",
+}
